@@ -3,17 +3,19 @@
     <head>
         <title>Speech Recognition plugin demo</title>
         <script type="text/javascript" src="cordova.js"></script>
-        <script type="text/javascript" src="SpeechRecognizer.js"></script>
+        <script type="text/javascript" src="js/SpeechRecognizer.js"></script>
     </head>
     <body>
 
         <script type="text/javascript">
 
             function onDeviceReady(){
+                alert("Device is ready");
                 console.log("Device is ready");
             }
 
             function recognizeSpeech() {
+                alert('clicked');
                 var maxMatches = 5;
                 var promptString = "Speak now"; // optional
                 var language = "en-US";                     // optional
@@ -21,6 +23,7 @@
                     alert(result);
                 }, function(errorMessage){
                     console.log("Error message: " + errorMessage);
+                    alert("Error message: " + errorMessage);
                 }, maxMatches, promptString, language);
             }
 
