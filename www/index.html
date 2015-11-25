@@ -31,80 +31,41 @@
     </head>
     <body>
 
-<script type="text/javascript">
-            
-            var recognizer = null;
+        <script type="text/javascript">
 
-            function recognize()
-            {
-                //speechRecognization interface is the heart of recognization API
-                window.speechRecognition = window.speechRecognition || window.webkitSpeechRecognition || window.mozSpeechRecognition || window.webkitSpeechRecognition;
-
-                if(window.speechRecognition == undefined)
-                {
-                    alert("Speech Recogniztion API Not Supported");
-                }
-                else
-                {
-                    //create a speechRecognization object
-                    recognizer = new speechRecognition();
-
-                    //If set to "false" then recognizer stops listening automatically when user stops speaking the first sentence.
-                    recognizer.continuous = true;
-
-                    //specify the language of speech. langauge must be in BCP 47 standard.
-                    recognizer.lang = "en-US";
-
-                    //it set to true then onresult callback is fired after every word spoken by the user. Otherwise after end of sentence.
-                    recognizer.interimResults = true;
-
-
-                    //fired when speech recognization starts listening.
-                    recognizer.onstart = function(){
-                        alert("Recogniztion API started");
-                    }
-
-                    //fired everytime user stops speaking.
-                    recognizer.onresult = function(event){  
-                        //event.resultIndex returns the index of first word spoken in the currently stoped sentence.
-                        //event.results.length is the total number of words spoken in this session.
-                        for(var count = event.resultIndex; count < event.results.length; count++)
-                        {
-                            //event.results array contains a array of word objects.
-                            //event.results[count][number], here 2D represents the most probable work for the spoken word.
-                            //event.result[count][number].transscript returns word string of the most probable word of the select word index.  
-                            document.getElementById("output").innerHTML += event.results[count][0].transcript;
-                        }
-                    }
-
-                    //fired when recognization is stopped manually or automatically.
-                    recognizer.onend = function(){
-                        recognizer = null;
-                        alert("Recogniztion API stopped");
-                    }
-
-                    recognizer.start();
-                }
+            function onDeviceReady(){
+                console.log("Device is ready");
             }
 
-            function stop()
-            {
-                if(recognizer != null)
-                {
-                    //stop it manually
-                    recognizer.stop();
-                    alert("Recognization API stopped");
-                }
+            function recognizeSpeech() {
+                var maxMatches = 5;
+                var promptString = "Speak now"; // optional
+                var language = "en-US";                     // optional
+                navigator.SpeechRecognizer.startRecognize(function(result){
+                    alert(result);
+                }, function(errorMessage){
+                    console.log("Error message: " + errorMessage);
+                }, maxMatches, promptString, language);
             }
 
+            // Show the list of the supported languages
+            function getSupportedLanguages() {
+                navigator.SpeechRecognizer.getSupportedLanguages(function(languages){
+                    // display the json array
+                    alert(languages);
+                }, function(error){
+                    alert("Could not retrieve the supported languages : " + error);
+                });
+            }
+
+            document.addEventListener("deviceready", onDeviceReady, true);
         </script>
 
-<button onclick="recognize();">Start Recognization</button>
-        <button onclick="stop();">Stop Recognization</button>
-        <textarea id="output"></textarea>
+        <button onclick="recognizeSpeech();">Start recognition</button>
+        <button onclick="getSupportedLanguages();">Get Supported Languages</button>
         <script src="phonegap.js"></script>
         <script type="text/javascript" src="cordova.js"></script>
-                <script type="text/javascript" src="SpeechRecognizer.js"></script>
+                <script type="text/javascript" src="js/SpeechRecognition.js"></script>
 
     </body>
 </html>
